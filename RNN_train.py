@@ -12,7 +12,7 @@ PATH_F5 = "F:/PyTorch学习/BPE_handle/result.hdf5"
 # hdf5文件读出及词典大小获取
 f = h5py.File(PATH_F5, "r")
 vocab_size = f["nword"][()]  # 取出主键为nword的所有键值，即收集的词典大小（读取的数据是标量，用[()]）
-print(vocab_size)
+# print(vocab_size)
 
 # GPU
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -55,15 +55,15 @@ if __name__ == '__main__':
 
         for index in f["group"]:
             data = torch.LongTensor(f["group"][index][:])
-            print(data)
+            # print(data)
             data_num = data.shape[1]
-            print(data_num)
+            # print(data_num)
             input = data.narrow(1, 0, data_num - 1)
-            print(input)
-            print(len(input))
+            # print(input)
+            # print(len(input))
             target = data.narrow(1, 1, data_num - 1)
-            print(target)
-            print(len(target))
+            # print(target)
+            # print(len(target))
 
             input = input.to(device)
             target = target.to(device)
@@ -93,4 +93,4 @@ if __name__ == '__main__':
                 print('模型参数保存成功')
                 print('--' * 30)
             curb += 1
-        f.close()
+    f.close()
