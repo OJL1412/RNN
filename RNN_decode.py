@@ -4,7 +4,7 @@ from RNN_model import M_RNN
 
 PATH_MODEL = "./RNN_train_state/train_state_73000.pth"
 PATH_INDEX = "F:/PyTorch学习/BPE_handle/en_index.npy"
-# PATH_INDEX = "en_index.npy"
+# PATH_INDEX = "./RNN_file/en_index.npy"
 
 
 def load(srcf):
