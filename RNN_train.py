@@ -7,7 +7,7 @@ from math import sqrt
 
 # hdf5文件路径
 PATH_F5 = "F:/PyTorch学习/BPE_handle/result.hdf5"
-# PATH_F5 = "result.hdf5"
+# PATH_F5 = "./RNN_file/result.hdf5"
 
 # hdf5文件读出及词典大小获取
 f = h5py.File(PATH_F5, "r")
