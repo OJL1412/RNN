@@ -3,7 +3,6 @@ import h5py
 import torch.nn as nn
 import torch.optim as op
 from RNN_model import M_RNN
-from math import sqrt
 
 # hdf5文件路径
 PATH_F5 = "F:/PyTorch学习/BPE_handle/result.hdf5"
@@ -18,7 +17,7 @@ vocab_size = f["nword"][()]  # 取出主键为nword的所有键值，即收集�
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # 相关参数设置
-num_epoch = 2  # 训练轮次
+num_epoch = 1  # 训练轮次
 curb = 0  # 起始组数
 
 if __name__ == '__main__':
@@ -53,15 +52,15 @@ if __name__ == '__main__':
         print('**' * 15, "训练轮次{}".format(epoch + 1), '**' * 15)
         curb = 0
 
-        for index in f["group"]:
-            data = torch.LongTensor(f["group"][index][:])
+        for index in f["src"]:
+            data = torch.LongTensor(f["src"][index][:])
             # print(data)
-            data_num = data.shape[1]
+            data_num = data.size(1) - 1
             # print(data_num)
-            input = data.narrow(1, 0, data_num - 1)
+            input = data.narrow(1, 0, data_num)     # 0~n-1
             # print(input)
             # print(len(input))
-            target = data.narrow(1, 1, data_num - 1)
+            target = data.narrow(1, 1, data_num)    # 1~n
             # print(target)
             # print(len(target))
 
@@ -90,7 +89,7 @@ if __name__ == '__main__':
             # 每处理1000个batch保存一次模型参数
             if curb % 1000 == 0:
                 torch.save(model.state_dict(), './RNN_train_state/train_state_{}.pth'.format(curb))
-                print('模型参数保存成功')
+                print('<train_state_{}.pth>存储完毕, 模型参数保存成功'.format(curb))
                 print('--' * 30)
             curb += 1
     f.close()
