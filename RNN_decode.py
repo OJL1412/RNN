@@ -47,25 +47,24 @@ if __name__ == '__main__':
     # model.load_state_dict(net_state_dict)
 
     decode_step = len(sentence)
-    predict_step = len(word2id_l)
+    predict_step = 10
 
     state = None
     # print(state.is_cuda)
     result = []
 
-    # 先将整句话过一遍decode
+    # 先将整句话过一遍decode，可以理解为将整句话的每个词的hidden_state全部集中于最后一个词的hidden_state上，进而预测最后一个词的下一个词
     for i in range(decode_step):
         words = torch.LongTensor([word2id_l[i]]).to(device)
         output, state = model.decode(words, state)
-        # print(state)
-        # print("**"*40)
 
-    # print(state)
-
-    for i in range(predict_step):
-        # print(state)
+    # 在经过整句话的decode处理后，从整句话预测的最后的一个词的下一个词开始预测，预测词数和整句话的词数一致
+    for i in range(decode_step-1, predict_step):
         words = torch.LongTensor([word2id_l[i]]).to(device)  # 每次取一个词的索引
         output, state = model.decode(words, state)  # 解码获得最可能的下一个词
+        # print(output.item())
+        word2id_l.append(output.item())
+
         result.append(output.item())
 
     result_words = id2word(en2index, result)
