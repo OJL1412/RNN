@@ -49,14 +49,9 @@ class M_RNN(nn.Module):
         input = self.w_emb(input_words)
 
         _state = []
-        # curb = 0
         for i in input.unbind(1):
-            # print("curb{}为:\n{}".format(curb, hidden_state))
-            # print("--"*40)
             hidden_state = self.net(torch.cat((i, hidden_state), dim=-1))  # 将现在的词向量与上一个词的隐状态进行拼接，放入net中进行处理，更新输出
-            # print("得到的结果为:\n{}".format(hidden_state))
             _state.append(hidden_state)  # 将处理后的结果放入设置的列表进行存储
-            # curb += 1
 
         output = self.classifier(torch.stack(_state, dim=1))  # s使用stack进行堆叠处理，结果过classifier
 
@@ -71,9 +66,6 @@ class M_RNN(nn.Module):
     def decode(self, input_words, state):
         input = self.w_emb(input_words)
         hidden_state = self.hidden_state_init.expand((input_words.size(0), -1)) if state is None else state
-
-        # print(hidden_state)
-        # print("--"*40)
 
         state = self.net(torch.cat((input, hidden_state), dim=-1))
 
