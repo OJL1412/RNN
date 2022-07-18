@@ -6,6 +6,8 @@ from BPE_handle.word22id import word2id, id2word, get_word, replace_word
 
 PATH_MODEL = "./RNN_train_state/train_state_73000.pth"
 PATH_INDEX = "F:/PyTorch学习/BPE_handle/en_index.npy"
+
+
 # PATH_INDEX = "./RNN_file/en_index.npy"
 
 
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     # print(sentence)
 
     sentence = replace_word(sentence, en)
-    print(sentence)
+    # print(sentence)
 
     word2id_l = word2id(en2index, sentence)  # !!!
     # print(word2id)
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     # model.load_state_dict(net_state_dict)
 
     decode_step = len(sentence)
-    predict_step = 10
+    predict_step = int(input("请输入想预测的词数:"))
 
     state = None
     # print(state.is_cuda)
@@ -58,12 +60,12 @@ if __name__ == '__main__':
         words = torch.LongTensor([word2id_l[i]]).to(device)
         output, state = model.decode(words, state)
 
-    # 在经过整句话的decode处理后，从整句话预测的最后的一个词的下一个词开始预测，预测词数和整句话的词数一致
-    for i in range(decode_step-1, predict_step):
+    # 在经过整句话的decode处理后，从整句话预测的最后的一个词的下一个词开始预测
+    for i in range(decode_step - 1, predict_step):
         words = torch.LongTensor([word2id_l[i]]).to(device)  # 每次取一个词的索引
         output, state = model.decode(words, state)  # 解码获得最可能的下一个词
         # print(output.item())
-        word2id_l.append(output.item())
+        word2id_l.append(output.item())  # 将获得的词的索引加入word2id_l继续处理
 
         result.append(output.item())
 
